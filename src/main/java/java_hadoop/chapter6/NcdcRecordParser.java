@@ -1,19 +1,20 @@
 package java_hadoop.chapter6;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.hadoop.io.Text;
 
 public class NcdcRecordParser {
 
 	private static final int MISSING_TEMPERATURE = 9999;
 	
-	private String year;
-	private int airTemperature;
-	private String quality;
-	private String record;
+	private String stationId = "";
+	private String year = "";
+	private int airTemperature = MISSING_TEMPERATURE;
+	private String quality = "";
+	private String record = "";
 	
 	public void parse(String record) {
 		this.record = record;
+		stationId = record.substring(0, 10);
 		year = record.substring(15, 19);
 		
 		// Remove leading plus sign as parseInt doesn't like them (pre-Java 7)
@@ -41,16 +42,27 @@ public class NcdcRecordParser {
 		return this.record.contains(" ");
 	}
 	
+	public boolean isMissingTemperature() {
+		return airTemperature == MISSING_TEMPERATURE;
+	}
+	
 	public String getYear() {
 		return year;
+	}
+	
+	public int getYearInt() {
+		return Integer.parseInt(year);
 	}
 	
 	public int getAirTemperature() {
 		return airTemperature;
 	}
 	
+	public String getQuality() {
+		return this.quality;
+	}
+	
 	public String getStationId() {
-		throw new NotImplementedException("method getStationId() is not implemented.");
-		//return "1";
+		return this.stationId;
 	}
 }

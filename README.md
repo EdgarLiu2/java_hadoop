@@ -22,4 +22,6 @@ bin/hadoop fs -rm -r -skipTrash /user/liuzhao/output
 bin/hadoop jar test/wc.jar WordCount /user/liuzhao/input /user/liuzhao/output
 bin/hadoop fs -ls /user/liuzhao/output/
 bin/hadoop fs -cat /user/liuzhao/output/part-r-00000
+
+mvn package -Dmaven.test.skip=true
 ```

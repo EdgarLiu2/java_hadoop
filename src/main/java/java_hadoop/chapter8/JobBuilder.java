@@ -10,7 +10,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 
-class JobBuilder {
+public class JobBuilder {
 	
 	public static Job parseInputAndOuput(Tool tool, Configuration conf, String[] args) throws IOException {
 		if (args.length != 2) {
