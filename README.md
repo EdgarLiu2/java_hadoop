@@ -25,3 +25,19 @@ bin/hadoop fs -cat /user/liuzhao/output/part-r-00000
 
 mvn package -Dmaven.test.skip=true
 ```
+
+```
+SET JAVA_HOME=D:\workspace\software\jdk-13.0.1
+SET HADOOP_HOME=D:\workspace\data\hadoop\hadoop-3.1.3
+SET PATH=%HADOOP_HOME%\sbin:%HADOOP_HOME%\bin:%PATH%
+
+
+call %HADOOP_HOME%\bin\hdfs.cmd namenode -format
+call %HADOOP_HOME%\sbin\start-dfs.cmd
+call %HADOOP_HOME%\sbin\start-yarn.cmd
+
+%HADOOP_HOME%\bin\hdfs.cmd dfs -mkdir /user
+%HADOOP_HOME%\bin\hdfs.cmd dfs -mkdir /user/liuzhao
+%HADOOP_HOME%\bin\hdfs.cmd dfs -mkdir /user/liuzhao/input
+%HADOOP_HOME%\bin\hdfs.cmd fs -ls /user/liuzhao/input/
+```
