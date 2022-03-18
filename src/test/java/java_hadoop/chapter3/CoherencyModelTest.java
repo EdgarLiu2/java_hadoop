@@ -10,6 +10,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertThat;
@@ -42,6 +43,7 @@ public class CoherencyModelTest {
 		}
 	}
 	
+	@Ignore
 	@Test
 	public void testFileExists() throws IOException {
 		Path p = new Path("/test_fs_exists");
@@ -49,6 +51,7 @@ public class CoherencyModelTest {
 		assertThat(fs.exists(p), is(true));
 	}
 	
+	@Ignore
 	@Test
 	public void testFlush() throws IOException {
 		Path p = new Path("/test_flush");
@@ -60,6 +63,7 @@ public class CoherencyModelTest {
 		assertThat(fs.getFileStatus(p).getLen(), is(0L));
 	}
 	
+	@Ignore
 	@Test
 	public void testHFlush() throws IOException {
 		Path p = new Path("/test_hflush");

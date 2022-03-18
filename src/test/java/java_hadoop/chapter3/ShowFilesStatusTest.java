@@ -3,6 +3,7 @@ package java_hadoop.chapter3;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertThat;
@@ -49,11 +50,13 @@ public class ShowFilesStatusTest {
 		}
 	}
 	
+	@Ignore
 	@Test(expected = FileNotFoundException.class)
 	public void throwsFileNotFoundForNonExistentFile() throws IOException {
 		fs.getFileStatus(new Path("no-such-file"));
 	}
 
+	@Ignore
 	@Test
 	public void fileStatusForFile() throws IOException {
 		Path file = new Path("/dir/file");
@@ -70,6 +73,7 @@ public class ShowFilesStatusTest {
 		assertThat(stat.getPermission().toString(), is("rw-r--r--"));
 	}
 	
+	@Ignore
 	@Test
 	public void fileStatusForDirectory() throws IOException {
 		Path file = new Path("/dir");
