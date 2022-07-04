@@ -34,3 +34,5 @@ dependency-reduced-pom.xml
 .project
 .settings/
 
+### IntelliJ IDEA ###
+/.idea/
