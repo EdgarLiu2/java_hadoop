@@ -19,17 +19,26 @@ public class PhoneFlowBean implements WritableComparable<PhoneFlowBean> {
     }
 
     /**
-     * 按照总流量的倒序进行排序
+     * 按照总流量的倒序进行排序，总流量相同时按照上行流量正序排序
      */
     @Override
     public int compareTo(PhoneFlowBean o) {
 
+        // 先按总流量的倒序
         if (this.totalFlowBytes > o.getTotalFlowBytes()) {
             return -1;
         } else if (this.totalFlowBytes < o.getTotalFlowBytes()) {
             return 1;
         }
 
+        // 当总流量相同时，按照上行流量正序排序
+        if (this.upFlowBytes > o.getUpFlowBytes()) {
+            return 1;
+        } else if (this.upFlowBytes < o.getUpFlowBytes()) {
+            return -1;
+        }
+
+        // 总流量和上行流量都相同
         return 0;
     }
 

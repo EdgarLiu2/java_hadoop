@@ -43,11 +43,11 @@ public class PhoneFlowDriver {
 
         // 6. 指定Job的输入文件目录
 //        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileInputFormat.addInputPath(job, new Path(HDFSUtil.INPUT_BASE + "/phone_data/input"));
+        FileInputFormat.addInputPath(job, new Path(HDFSUtil.DATA_BASE + "/phone_data/input"));
 
         // 7. 指定Job的输出结果目录
 //        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        FileOutputFormat.setOutputPath(job, new Path(HDFSUtil.OUTPUT_BASE + "/phone_data/output"));
+        FileOutputFormat.setOutputPath(job, new Path(HDFSUtil.DATA_BASE + "/phone_data/output"));
 
         // 8. 提交Job
         System.exit(job.waitForCompletion(true) ? 0 : 1);

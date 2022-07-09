@@ -1,5 +1,6 @@
 package java_hadoop.atguigu.demo;
 
+import java_hadoop.atguigu.util.HDFSUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -68,6 +69,21 @@ public class WordCount {
         }
     }
 
+    public static class WordCountCombiner
+            extends Reducer<Text, IntWritable, Text, IntWritable> {
+        private IntWritable result = new IntWritable();
+
+        public void reduce(Text key, Iterable<IntWritable> values, Context context)
+                throws IOException, InterruptedException {
+            int sum = 0;
+            for (IntWritable val : values) {
+                sum += val.get();
+            }
+            result.set(sum);
+            context.write(key, result);
+        }
+    }
+
     static void wordCount(String inputPath, String outputPath) throws Exception {
         // 1. 获取配置信息，获取Job对象
         Configuration conf = new Configuration();
@@ -78,7 +94,6 @@ public class WordCount {
 
         // 3. 关联Mapper/Reducer业务类
         job.setMapperClass(TokenizerMapper.class);
-        job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
 
         // 4. 指定Mapper输出的<K, V>类型
@@ -90,11 +105,9 @@ public class WordCount {
         job.setOutputValueClass(IntWritable.class);
 
         // 6. 指定Job的输入文件目录
-//        FileInputFormat.addInputPath(job, new Path("/Users/liuzhao/Desktop/Bytedance/workspace/hadoop/hadoop_test/wordcount/input"));
         FileInputFormat.addInputPath(job, new Path(inputPath));
 
         // 7. 指定Job的输出结果目录
-//        FileOutputFormat.setOutputPath(job, new Path("/Users/liuzhao/Desktop/Bytedance/workspace/hadoop/hadoop_test/wordcount/output"));
         FileOutputFormat.setOutputPath(job, new Path(outputPath));
 
         // 8. 提交Job
@@ -111,7 +124,6 @@ public class WordCount {
 
         // 3. 关联Mapper/Reducer业务类
         job.setMapperClass(TokenizerMapper.class);
-        job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
 
         // 4. 指定Mapper输出的<K, V>类型
@@ -146,7 +158,6 @@ public class WordCount {
 
         // 3. 关联Mapper/Reducer业务类
         job.setMapperClass(TokenizerMapper.class);
-        job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
 
         // 4. 指定Mapper输出的<K, V>类型
@@ -176,7 +187,40 @@ public class WordCount {
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 
+    static void wordCountWithCombiner(String inputPath, String outputPath) throws Exception {
+        // 1. 获取配置信息，获取Job对象
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "WordCount");
+
+        // 2. 指定本程序的jar包所再的本地路径
+        job.setJarByClass(WordCount.class);
+
+        // 3. 关联Mapper/Reducer业务类
+        job.setMapperClass(TokenizerMapper.class);
+        job.setCombinerClass(WordCountCombiner.class);
+        job.setReducerClass(IntSumReducer.class);
+
+        // 4. 指定Mapper输出的<K, V>类型
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        // 5. 指定最终输出的<K, V>类型
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+
+        // 6. 指定Job的输入文件目录
+        FileInputFormat.addInputPath(job, new Path(inputPath));
+
+        // 7. 指定Job的输出结果目录
+        FileOutputFormat.setOutputPath(job, new Path(outputPath));
+
+        // 8. 提交Job
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+
     public static void main(String[] args) throws Exception {
-        wordCount(args[0], args[1]);
+//        wordCount(args[0], args[1]);
+        wordCount(HDFSUtil.DATA_BASE + "/word_count/input", HDFSUtil.DATA_BASE + "/word_count/output");
+//        wordCountWithCombiner(HDFSUtil.DATA_BASE + "/word_count/input", HDFSUtil.DATA_BASE + "/word_count/output");
     }
 }

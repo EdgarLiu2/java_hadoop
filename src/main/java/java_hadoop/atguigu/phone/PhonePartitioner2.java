@@ -8,9 +8,9 @@ import org.apache.hadoop.mapreduce.Partitioner;
  *
  * Created by liuzhao on 2022/7/3
  */
-public class PhonePartitioner extends Partitioner<Text, PhoneFlowBean> {
+public class PhonePartitioner2 extends Partitioner<PhoneFlowBean, Text> {
     @Override
-    public int getPartition(Text text, PhoneFlowBean phoneFlowBean, int numPartitions) {
+    public int getPartition(PhoneFlowBean phoneFlowBean, Text text, int numPartitions) {
         String phone = text.toString();
         String phonePrefix = phone.substring(0, 3);
 

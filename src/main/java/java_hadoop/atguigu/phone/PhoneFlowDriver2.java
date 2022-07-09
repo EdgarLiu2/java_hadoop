@@ -36,17 +36,17 @@ public class PhoneFlowDriver2 {
         job.setOutputValueClass(PhoneFlowBean.class);
 
         // 设置自定义分区类
-//        job.setPartitionerClass(PhonePartitioner.class);
+        job.setPartitionerClass(PhonePartitioner2.class);
         // 设置ReduceTask的数目，默认为1
-//        job.setNumReduceTasks(5);
+        job.setNumReduceTasks(5);
 
         // 6. 指定Job的输入文件目录
 //        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileInputFormat.addInputPath(job, new Path(HDFSUtil.INPUT_BASE + "/phone_data/input2"));
+        FileInputFormat.addInputPath(job, new Path(HDFSUtil.DATA_BASE + "/phone_data/input2"));
 
         // 7. 指定Job的输出结果目录
 //        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        FileOutputFormat.setOutputPath(job, new Path(HDFSUtil.OUTPUT_BASE + "/phone_data/output2"));
+        FileOutputFormat.setOutputPath(job, new Path(HDFSUtil.DATA_BASE + "/phone_data/output2"));
 
         // 8. 提交Job
         System.exit(job.waitForCompletion(true) ? 0 : 1);

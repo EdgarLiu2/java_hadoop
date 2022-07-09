@@ -15,8 +15,7 @@ import java.net.URISyntaxException;
  */
 public class HDFSUtil {
 
-    public final static String INPUT_BASE = "/Users/liuzhao/Desktop/Bytedance/workspace/GitHub/java_hadoop/src/input";
-    public final static String OUTPUT_BASE = "/Users/liuzhao/Desktop/Bytedance/workspace/hadoop/hadoop_test";
+    public final static String DATA_BASE = "/Users/liuzhao/Desktop/Bytedance/workspace/GitHub/java_hadoop/src/data";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
