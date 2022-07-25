@@ -20,7 +20,7 @@ public class PhoneFlowDriver2 {
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "PhoneFlow");
 
-        // 2. 指定本程序的jar包所再的本地路径
+        // 2. 指定本程序的jar包所在的本地路径
         job.setJarByClass(PhoneFlowDriver2.class);
 
         // 3. 关联Mapper/Reducer业务类
