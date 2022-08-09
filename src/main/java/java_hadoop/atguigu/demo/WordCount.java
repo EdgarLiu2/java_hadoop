@@ -6,6 +6,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.compress.BZip2Codec;
+import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -18,11 +20,10 @@ import java.util.StringTokenizer;
 
 
 /**
- * https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html
+ * <a href="https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html">WordCount</a>
  * mvn package -DskipTests
  * hadoop jar ~/workspace/GitHub/java_leetcode/target/leetcode-1.0-SNAPSHOT.jar edgar.hadoop.WordCount /Users/liuzhao/Desktop/Bytedance/workspace/hadoop/hadoop_test/wordcount/input /Users/liuzhao/Desktop/Bytedance/workspace/hadoop/hadoop_test/wordcount/output
  * hadoop jar ~/workspace/GitHub/java_leetcode/target/leetcode-1.0-SNAPSHOT.jar edgar.hadoop.WordCount /test/wordcount/input /test/wordcount/output
- *
  * Created by liuzhao on 2022/6/19
  */
 public class WordCount {
@@ -218,9 +219,51 @@ public class WordCount {
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 
+    static void wordCountWithCompression(String inputPath, String outputPath) throws Exception {
+        // 1. 获取配置信息，获取Job对象
+        Configuration conf = new Configuration();
+        // 开启Map端输出压缩
+        conf.setBoolean("mapreduce.map.output.compress", true);
+        // 设置Map端输出压缩方式
+        conf.setClass("mapreduce.map.output.compress.codec", BZip2Codec.class, CompressionCodec.class);
+
+        Job job = Job.getInstance(conf, "WordCount");
+
+        // 2. 指定本程序的jar包所再的本地路径
+        job.setJarByClass(WordCount.class);
+
+        // 3. 关联Mapper/Reducer业务类
+        job.setMapperClass(TokenizerMapper.class);
+        job.setReducerClass(IntSumReducer.class);
+
+        // 4. 指定Mapper输出的<K, V>类型
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
+        // 5. 指定最终输出的<K, V>类型
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+
+        // 6. 指定Job的输入文件目录
+        FileInputFormat.addInputPath(job, new Path(inputPath));
+
+        // 7. 指定Job的输出结果目录
+        FileOutputFormat.setOutputPath(job, new Path(outputPath));
+        // 开启Reduce端输出压缩
+        FileOutputFormat.setCompressOutput(job, true);
+        // 设置Reduce端输出压缩方式
+        FileOutputFormat.setOutputCompressorClass(job, BZip2Codec.class);
+//        FileOutputFormat.setOutputCompressorClass(job, GzipCodec.class);
+
+        // 8. 提交Job
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+
     public static void main(String[] args) throws Exception {
 //        wordCount(args[0], args[1]);
-        wordCount(HDFSUtil.DATA_BASE + "/word_count/input", HDFSUtil.DATA_BASE + "/word_count/output");
-//        wordCountWithCombiner(HDFSUtil.DATA_BASE + "/word_count/input", HDFSUtil.DATA_BASE + "/word_count/output");
+//        wordCount(HDFSUtil.DATA_BASE + "/word_count/input", HDFSUtil.DATA_BASE + "/word_count/output1");
+//        wordCountWithCombiner(HDFSUtil.DATA_BASE + "/word_count/input", HDFSUtil.DATA_BASE + "/word_count/output2");
+        wordCountWithCompression(HDFSUtil.DATA_BASE + "/word_count/input", HDFSUtil.DATA_BASE + "/word_count/output3");
+
     }
 }
